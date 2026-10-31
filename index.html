@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catálogo de Ferramentas Recomendadas</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="container header-container">
+        <h1>Catálogo de Ferramentas</h1>
+        <nav aria-label="Navegação Principal">
+          <button
+            id="btnLogin"
+            class="btn-primary"
+            aria-label="Fazer login com o Google"
+          >
+            Login com Google
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Área de Filtros / Busca -->
+      <section class="filters-section" aria-labelledby="filters-title">
+        <h2 id="filters-title" class="sr-only">Filtrar ferramentas</h2>
+        <div class="filter-group">
+          <label for="categoryFilter">Categoria:</label>
+          <select id="categoryFilter">
+            <option value="todas">Todas</option>
+            <!-- Opções geradas via JS -->
+          </select>
+        </div>
+      </section>
+
+      <!-- Grid de Ferramentas -->
+      <section class="tools-grid" aria-live="polite" id="toolsContainer">
+        <!-- Os cards das ferramentas serão renderizados aqui pelo JS -->
+        <p>Carregando ferramentas...</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>
+          &copy; 2026 Catálogo de Ferramentas. Desenvolvido para produtividade.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Scripts modularizados -->
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

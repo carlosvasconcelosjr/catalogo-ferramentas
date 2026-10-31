@@ -1,0 +1,278 @@
+/* ==========================================================================
+   Variáveis e Reset
+   ========================================================================== */
+:root {
+    /* Paleta de Cores */
+    --bg-dark: #121212;          /* Fundo principal escuro */
+    --bg-surface: #1e1e1e;       /* Fundo de cards e seções destacadas */
+    --text-ice: #e2e8f0;         /* Branco gelo para texto principal */
+    --text-muted: #a0aec0;       /* Texto secundário */
+    
+    /* Cores de Destaque */
+    --accent-yellow: #f59e0b;    /* Destaque primário (botões, ícones) */
+    --accent-orange: #ea580c;    /* Destaque secundário (hover) */
+    --accent-olive: #65a30d;     /* Sucesso ou tags de categorias */
+    --accent-blue-dark: #1e3a8a; /* Elementos de navegação e cabeçalhos */
+
+    /* Espaçamento e Tipografia */
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 32px;
+    --border-radius: 8px;
+    --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Reset Básico para Responsividade */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-ice);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.sr-only {
+    /* Classe para acessibilidade: esconde visualmente, mas mantém para leitores de tela */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* ==========================================================================
+   Cabeçalho e Navegação
+   ========================================================================== */
+.main-header {
+    background-color: var(--accent-blue-dark);
+    padding: var(--spacing-md) 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.btn-primary {
+    background-color: var(--accent-yellow);
+    color: var(--bg-dark);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--accent-orange);
+    outline: 2px solid var(--text-ice);
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Área Principal e Grid
+   ========================================================================== */
+main {
+    flex: 1;
+    padding: var(--spacing-lg) 0;
+}
+
+.filters-section {
+    margin-bottom: var(--spacing-lg);
+    background-color: var(--bg-surface);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+}
+
+.tools-grid {
+    display: grid;
+    /* Grid responsivo automático: 1 coluna em celular, adaptando para mais em telas maiores */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+footer {
+    text-align: center;
+    padding: var(--spacing-md);
+    background-color: var(--bg-surface);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Painel Administrativo e Formulários
+   ========================================================================== */
+.admin-section {
+    background-color: var(--bg-surface);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+}
+
+.forms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+}
+
+.form-card {
+    background-color: var(--bg-dark);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid #2d2d2d;
+}
+
+.form-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-card h3 {
+    margin-bottom: var(--spacing-md);
+    color: var(--accent-yellow);
+    border-bottom: 2px solid #2d2d2d;
+    padding-bottom: var(--spacing-sm);
+}
+
+.input-group {
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+}
+
+label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: var(--text-muted);
+}
+
+input, select, textarea {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: var(--text-ice);
+    padding: 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    width: 100%;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue-dark);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Cards de Ferramentas (index.html)
+   ========================================================================== */
+.tool-card {
+    background-color: var(--bg-surface);
+    border: 1px solid #2d2d2d;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+    border-color: var(--accent-yellow);
+}
+
+.tool-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: var(--spacing-md);
+    border-bottom: 1px solid #2d2d2d;
+    padding-bottom: var(--spacing-sm);
+}
+
+.tool-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    background-color: #fff; /* Fundo branco para logos ficarem visíveis */
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.tool-title h3 {
+    font-size: 1.2rem;
+    color: var(--text-ice);
+    margin-bottom: 4px;
+}
+
+.tool-tag {
+    display: inline-block;
+    background-color: var(--accent-olive);
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.tool-body {
+    flex: 1; /* Faz o card empurrar o footer para baixo */
+    margin-bottom: var(--spacing-md);
+}
+
+.tool-body p {
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-muted);
+}
+
+.tool-tips {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-left: 3px solid var(--accent-yellow);
+    padding: 8px;
+    font-style: italic;
+}
+
+.tool-footer {
+    text-align: center;
+}
+
+.tool-footer .btn-primary {
+    display: inline-block;
+    width: 100%;
+    text-decoration: none;
+}

@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel Administrativo - Catálogo</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="container header-container">
+        <h1>Painel de Gestão</h1>
+        <nav aria-label="Navegação Administrativa">
+          <a
+            href="index.html"
+            class="btn-secondary"
+            style="
+              color: var(--text-ice);
+              margin-right: 15px;
+              text-decoration: none;
+            "
+            >Ver Catálogo</a
+          >
+          <button id="btnLogout" class="btn-primary" aria-label="Sair da conta">
+            Sair
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="admin-section" aria-labelledby="admin-title">
+        <h2 id="admin-title">Gestão de Catálogo</h2>
+
+        <div class="forms-grid">
+          <!-- Formulário de Categoria -->
+          <article class="form-card">
+            <h3>Nova Categoria</h3>
+            <form id="formCategoria">
+              <div class="input-group">
+                <label for="catNome">Nome da Categoria:</label>
+                <input
+                  type="text"
+                  id="catNome"
+                  required
+                  placeholder="Ex: Front-end, Segurança"
+                />
+              </div>
+              <button type="submit" class="btn-primary">
+                Salvar Categoria
+              </button>
+            </form>
+          </article>
+
+          <!-- Formulário de Subcategoria -->
+          <article class="form-card">
+            <h3>Nova Subcategoria</h3>
+            <form id="formSubcategoria">
+              <div class="input-group">
+                <label for="subCatPai">Categoria Pai:</label>
+                <select id="subCatPai" required>
+                  <option value="">Selecione uma categoria...</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label for="subCatNome">Nome da Subcategoria:</label>
+                <input
+                  type="text"
+                  id="subCatNome"
+                  required
+                  placeholder="Ex: Frameworks, Criptografia"
+                />
+              </div>
+              <button type="submit" class="btn-primary">
+                Salvar Subcategoria
+              </button>
+            </form>
+          </article>
+
+          <!-- Formulário de Ferramenta -->
+          <article class="form-card full-width">
+            <h3>Cadastrar Ferramenta</h3>
+            <form id="formFerramenta">
+              <div class="input-row">
+                <div class="input-group">
+                  <label for="ferNome">Nome da Ferramenta:</label>
+                  <input type="text" id="ferNome" required />
+                </div>
+                <div class="input-group">
+                  <label for="ferLogoUrl">Logotipo (URL da imagem):</label>
+                  <input
+                    type="url"
+                    id="ferLogoUrl"
+                    placeholder="https://exemplo.com/logo.png"
+                  />
+                </div>
+              </div>
+
+              <div class="input-row">
+                <div class="input-group">
+                  <label for="ferCat">Categoria:</label>
+                  <select id="ferCat" required>
+                    <option value="">Selecione...</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="ferSubCat">Subcategoria (Opcional):</label>
+                  <select id="ferSubCat">
+                    <option value="">Nenhuma...</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="ferLink">Link para Acesso/Download:</label>
+                <input
+                  type="url"
+                  id="ferLink"
+                  required
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div class="input-group">
+                <label for="ferResumo">Resumo / Objetivos:</label>
+                <textarea id="ferResumo" rows="3" required></textarea>
+              </div>
+
+              <div class="input-group">
+                <label for="ferDicas">Dicas / Observações:</label>
+                <textarea id="ferDicas" rows="3"></textarea>
+              </div>
+
+              <button type="submit" class="btn-primary">
+                Cadastrar Ferramenta
+              </button>
+            </form>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Script de integração do painel admin -->
+    <script type="module">
+      import { logout, checkAuthState } from "./js/auth.js";
+      import {
+        salvarCategoria,
+        salvarSubcategoria,
+        salvarFerramenta,
+        getCategorias,
+        getSubcategorias,
+      } from "./js/database.js";
+
+      checkAuthState(true);
+      document.getElementById("btnLogout").addEventListener("click", logout);
+
+      // Referências aos Selects
+      const selectCatPai = document.getElementById("subCatPai");
+      const selectFerCat = document.getElementById("ferCat");
+      const selectFerSubCat = document.getElementById("ferSubCat");
+
+      // Função para carregar categorias nos selects
+      const carregarCategorias = async () => {
+        try {
+          const categorias = await getCategorias();
+          const optionsHTML =
+            '<option value="">Selecione uma categoria...</option>' +
+            categorias
+              .map((c) => `<option value="${c.id}">${c.nome}</option>`)
+              .join("");
+
+          selectCatPai.innerHTML = optionsHTML;
+          selectFerCat.innerHTML = optionsHTML;
+        } catch (error) {
+          console.error("Erro ao carregar categorias:", error);
+        }
+      };
+
+      // Carrega as categorias ao abrir a página
+      carregarCategorias();
+
+      // Listener: Quando escolhe a Categoria na Ferramenta, carrega as Subcategorias
+      selectFerCat.addEventListener("change", async (e) => {
+        const idCategoria = e.target.value;
+        selectFerSubCat.innerHTML = '<option value="">Carregando...</option>';
+
+        if (!idCategoria) {
+          selectFerSubCat.innerHTML = '<option value="">Nenhuma...</option>';
+          return;
+        }
+
+        try {
+          const subcategorias = await getSubcategorias(idCategoria);
+          selectFerSubCat.innerHTML =
+            '<option value="">Nenhuma...</option>' +
+            subcategorias
+              .map((s) => `<option value="${s.id}">${s.nome}</option>`)
+              .join("");
+        } catch (error) {
+          console.error("Erro ao carregar subcategorias:", error);
+          selectFerSubCat.innerHTML =
+            '<option value="">Erro ao carregar</option>';
+        }
+      });
+
+      // Submit: Categoria
+      document
+        .getElementById("formCategoria")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const nomeInput = document.getElementById("catNome");
+          const btn = e.target.querySelector("button");
+
+          btn.textContent = "Salvando...";
+          btn.disabled = true;
+
+          try {
+            await salvarCategoria(nomeInput.value);
+            alert("Categoria cadastrada com sucesso!");
+            nomeInput.value = "";
+            carregarCategorias(); // Atualiza os selects automaticamente
+          } catch (error) {
+            alert("Erro ao salvar categoria.");
+          } finally {
+            btn.textContent = "Salvar Categoria";
+            btn.disabled = false;
+          }
+        });
+
+      // Submit: Subcategoria
+      document
+        .getElementById("formSubcategoria")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const nomeInput = document.getElementById("subCatNome");
+          const idCategoria = selectCatPai.value;
+          const btn = e.target.querySelector("button");
+
+          btn.textContent = "Salvando...";
+          btn.disabled = true;
+
+          try {
+            await salvarSubcategoria(idCategoria, nomeInput.value);
+            alert("Subcategoria cadastrada com sucesso!");
+            nomeInput.value = "";
+            selectCatPai.value = "";
+          } catch (error) {
+            alert("Erro ao salvar subcategoria.");
+          } finally {
+            btn.textContent = "Salvar Subcategoria";
+            btn.disabled = false;
+          }
+        });
+
+      // Submit: Ferramenta
+      document
+        .getElementById("formFerramenta")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const btn = e.target.querySelector("button");
+          btn.textContent = "Salvando...";
+          btn.disabled = true;
+
+          try {
+            const dadosFerramenta = {
+              nome: document.getElementById("ferNome").value,
+              idCategoria: document.getElementById("ferCat").value,
+              idSubcategoria:
+                document.getElementById("ferSubCat").value || null,
+              link: document.getElementById("ferLink").value,
+              resumo: document.getElementById("ferResumo").value,
+              dicas: document.getElementById("ferDicas").value,
+              urlLogo: document.getElementById("ferLogoUrl").value || null,
+            };
+
+            await salvarFerramenta(dadosFerramenta);
+            alert("Ferramenta cadastrada com sucesso!");
+            e.target.reset();
+            selectFerSubCat.innerHTML = '<option value="">Nenhuma...</option>';
+          } catch (error) {
+            console.error("Erro no cadastro:", error);
+            alert("Erro ao salvar a ferramenta. Verifique a consola.");
+          } finally {
+            btn.textContent = "Cadastrar Ferramenta";
+            btn.disabled = false;
+          }
+        });
+    </script>
+  </body>
+</html>
