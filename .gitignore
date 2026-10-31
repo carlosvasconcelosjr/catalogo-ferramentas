@@ -1,0 +1,10 @@
+# Configurações de Editores/IDEs
+.vscode/
+
+# Ficheiros de Sistema Operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
